@@ -51,11 +51,23 @@ public class Rank {
     }
     
     public static boolean isTwoPair(Hand hand){
+    	
     	if(!Rank.isPair(hand)){
     		return false;
     	}
-    	boolean passTwo = false;
     	
-    	return true;
+    	ArrayList<Card> sortedHand = Rank.sort(hand);
+    	boolean passTwo = false;
+    	int position = 0;
+    	
+    	while(position < 4){
+    		if(sortedHand.get(position).value == sortedHand.get(++position).value){
+    			if(!passTwo)
+    			    passTwo = true;
+    			else
+    				return true;
+    		}
+    	}
+    	return false;
     }
 }
