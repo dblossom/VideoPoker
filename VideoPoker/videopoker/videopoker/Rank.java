@@ -59,11 +59,11 @@ public class Rank {
 	 */
 	public static void main(String[] args){
     	Hand h = new Hand();
-    	h.hand[0] = new Card(Suit.HEART, 5);
-    	h.hand[1] = new Card(Suit.CLUB, 2);
-    	h.hand[2] = new Card(Suit.CLUB, 4);
+    	h.hand[0] = new Card(Suit.CLUB, Card.JACK);
+    	h.hand[1] = new Card(Suit.CLUB, Card.QUEEN);
+    	h.hand[2] = new Card(Suit.CLUB, 10);
     	h.hand[3] = new Card(Suit.CLUB, Card.ACE);
-    	h.hand[4] = new Card(Suit.CLUB, 3);
+    	h.hand[4] = new Card(Suit.CLUB, Card.KING);
     	
     	System.out.println(Rank.isPair(h));
     	System.out.println(Rank.isTwoPair(h));
@@ -71,6 +71,7 @@ public class Rank {
     	System.out.println(Rank.isStraight(h));
     	System.out.println(Rank.isFlush(h));
     	System.out.println(Rank.isStraightFlush(h));
+    	System.out.println(Rank.isRoyal(h));
     	h.printHand();
     }
 
@@ -171,6 +172,16 @@ public class Rank {
     private static boolean isStraight(Hand hand){
     	// a sorted hand to test
     	ArrayList<Card> sortedhand = Rank.sort(hand);
+    	
+    	// Ace needs to be handled differently...
+    	// either ACE, 2, 3, 4, 5 or 10, J, Q, K, A
+    	if(sortedhand.get(0).value == Card.ACE && sortedhand.get(4).value == Card.KING){
+    		if(sortedhand.get(1).value == 10 && sortedhand.get(2).value == Card.JACK && sortedhand.get(3).value == Card.QUEEN){
+    		    // well we should have the straight 10, J, Q, K, A... The below check will catch Ace as a 1 for A, 2, 3, 4, 5
+    			return true;
+    		}
+    	}
+    	
     	// starting position in the hand to start with
     	int position = 0;
     	// so basically a card should be 1 number off from the one before it
@@ -237,15 +248,15 @@ public class Rank {
     		ArrayList<Card> sortedhand = Rank.sort(hand);
     		// the order here should be 1, 10, 11, 12, 13
     		// I guess 4 tests? must be a better way
-    		if(sortedhand.get(0).value != 1)
+    		if(sortedhand.get(0).value != Card.ACE)
     			return false;
     		if(sortedhand.get(1).value != 10)
     			return false;
-    		if(sortedhand.get(2).value != 11)
+    		if(sortedhand.get(2).value != Card.JACK)
     			return false;
-    		if(sortedhand.get(3).value != 12)
+    		if(sortedhand.get(3).value != Card.QUEEN)
     			return false;
-    		if(sortedhand.get(4).value != 13)
+    		if(sortedhand.get(4).value != Card.KING)
     			return false;
     		
     		// well, we made it past all those checks
