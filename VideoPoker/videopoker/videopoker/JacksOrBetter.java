@@ -8,31 +8,48 @@ public class JacksOrBetter {
 	
 	public static void go(){
 		
-		Hand hand = new Hand();
-		hand.deal();
-		hand.printHand();
-		System.out.println();
-		System.out.println("You have: " + Rank.rank(hand));
-		System.out.print("How many cards would you like to change? ");
 		Scanner scan = new Scanner(System.in);
-		int swapAmount = scan.nextInt();
-		
-		if(swapAmount > 0){
-			System.out.print("Which cards would you like to swap? ");
-			int cards = scan.nextInt();
-			int elements[] = JacksOrBetter.makeToSwapArray(cards, swapAmount);
-			for(int i: elements){
-				hand.newCard(i-1);
-			}
+		while(true){
+		    
+			Hand hand = new Hand();
+		    hand.deal();
+		    hand.printHand();
+		    System.out.println();
+		    System.out.println("You have: " + Rank.rank(hand));
+		    System.out.print("Which cards would you like to hold (enter 0 for none): ");
+		    
+		    int cardsToHold = scan.nextInt();
+
+		    if(cardsToHold == 0){
+			    for(int i = 0; i < 5; i++){
+				    hand.newCard(i);
+			    }
+		    }else{
+			    int heldCards[] = JacksOrBetter.toHoldArray(cardsToHold);
+			    for(int i = 0; i < 5; i++){
+				    boolean held = false;
+				    for(int e: heldCards){
+					    if(e==i+1){
+						    held = true;
+						    break;
+					    }
+				    }
+				    if(!held){
+					    hand.newCard(i);
+				    }
+			    }
+			
+		    }
+		    System.out.println("Now you have: " + Rank.rank(hand));
+		    hand.printHand();
+		    System.out.println();
+		    System.out.println("--------------------------------");
 		}
-		scan.close();
-		
-		System.out.println("Now you have: " + Rank.rank(hand));
-		System.out.println();
-		hand.printHand();
+		//scan.close();
 	}
 	
-	private static int[] makeToSwapArray(int i, int s){
+	private static int[] toHoldArray(int i){
+		int s = (int)(Math.log10(i)+1);
 		int[] returnArray = new int[s];
 		while(i > 0){
 			returnArray[--s] = i % 10;
