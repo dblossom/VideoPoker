@@ -57,7 +57,7 @@ public class Rank {
 	 */
 	public static void main(String[] args){
     	Hand h = new Hand();
-    	h.hand[0] = new Card(Suit.CLUB, 10);
+    	h.hand[0] = new Card(Suit.CLUB, Card.ACE);
     	h.hand[1] = new Card(Suit.SPADE, Card.ACE);
     	h.hand[2] = new Card(Suit.CLUB, 10);
     	h.hand[3] = new Card(Suit.CLUB, Card.ACE);
@@ -69,6 +69,7 @@ public class Rank {
     	System.out.println("Straight: " + Rank.isStraight(h));
     	System.out.println("Flush: " + Rank.isFlush(h));
     	System.out.println("Full House: " + Rank.isFull(h));
+    	System.out.println("Four of a kind: " + Rank.isFour(h));
     	System.out.println("Straight Flush: " + Rank.isStraightFlush(h));
     	System.out.println("Royal Flush: " + Rank.isRoyal(h));
     	h.printHand();
@@ -255,9 +256,33 @@ public class Rank {
     }
     
     /**
-     * Four
+     * Returns if a hand contains 4 of a kind
+     * 
+     * @param hand the hand to be tested
+     * @return if the hand contains a 4 of a kind
      */
-    private static boolean isFour(Hand hand){return false;}
+    private static boolean isFour(Hand hand){
+    
+    	// start off with .. no pair, no four... 
+    	if(!Rank.isPair(hand)){
+    		return false;
+    	}
+    	
+    	// sorted hand will make this easier.
+    	ArrayList<Card> sortedhand = Rank.sort(hand);
+    	
+    	// given a sorted hand a 4 of a kind will be present when...
+    	// AAAAX or XAAAA so given that info we can check first and last
+    	if(sortedhand.get(0).value == sortedhand.get(3).value){
+    		return true;
+    	}
+    	if(sortedhand.get(1).value == sortedhand.get(4).value){
+    		return true;
+    	}
+    	
+    	// so we shouldn't have 4 of a kind
+    	return false;
+    }
 
     /**
      * Returns if a hand contains a straight flush
