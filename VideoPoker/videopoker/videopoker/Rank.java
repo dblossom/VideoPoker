@@ -14,7 +14,9 @@ import java.util.Comparator;
  */
 public class Rank {
 	
-	enum ranks { PAIR, TWO, THREE, STRAIGHT, FLUSH, FULL, FOUR, STRAIGHT_FLUSH, ROYAL }
+	// What we are returning, the "rank" of the hand...
+	// TODO: Not too excited about all the "rank" names...
+	enum ranks { HIGH, PAIR, TWO, THREE, STRAIGHT, FLUSH, FULL, FOUR, STRAIGHT_FLUSH, ROYAL }
 	
 	/**
 	 * Prevent default constructor
@@ -47,9 +49,47 @@ public class Rank {
 		return unsortedhand;
 	}
 	
-//	public static ranks rank(Hand hand){
-//		return ranks.FLUSH; // just to shut-up the error
-//	}
+	public static ranks rank(Hand hand){
+	
+		// so working backwards to find the best hand possible
+		if(Rank.isRoyal(hand)){
+			return ranks.ROYAL;
+		}
+		
+		if(Rank.isStraightFlush(hand)){
+			return ranks.STRAIGHT_FLUSH;
+		}
+		
+		if(Rank.isFour(hand)){
+			return ranks.FOUR;
+		}
+		
+		if(Rank.isFull(hand)){
+			return ranks.FULL;
+		}
+		
+		if(Rank.isFlush(hand)){
+			return ranks.FLUSH;
+		}
+		
+		if(Rank.isStraight(hand)){
+			return ranks.STRAIGHT;
+		}
+		
+		if(Rank.isThreeKind(hand)){
+			return ranks.THREE;
+		}
+		
+		if(Rank.isTwoPair(hand)){
+			return ranks.TWO;
+		}
+		
+		if(Rank.isPair(hand)){
+			return ranks.PAIR;
+		}
+		
+		return ranks.HIGH;	
+	}
     
 	/**
 	 * Main method used for testing
@@ -57,21 +97,18 @@ public class Rank {
 	 */
 	public static void main(String[] args){
     	Hand h = new Hand();
-    	h.hand[0] = new Card(Suit.CLUB, Card.ACE);
-    	h.hand[1] = new Card(Suit.SPADE, Card.ACE);
-    	h.hand[2] = new Card(Suit.CLUB, 10);
-    	h.hand[3] = new Card(Suit.CLUB, Card.ACE);
-    	h.hand[4] = new Card(Suit.CLUB, Card.ACE);
+//    	h.hand[0] = new Card(Suit.CLUB, Card.KING);
+//    	h.hand[1] = new Card(Suit.SPADE, Card.KING);
+//    	h.hand[2] = new Card(Suit.CLUB, 10);
+//    	h.hand[3] = new Card(Suit.CLUB, Card.KING);
+//    	h.hand[4] = new Card(Suit.CLUB, Card.KING);
     	
-    	System.out.println("Pair: " + Rank.isPair(h));
-    	System.out.println("Two Pair: " + Rank.isTwoPair(h));
-    	System.out.println("Three of a kind: " + Rank.isThreeKind(h));
-    	System.out.println("Straight: " + Rank.isStraight(h));
-    	System.out.println("Flush: " + Rank.isFlush(h));
-    	System.out.println("Full House: " + Rank.isFull(h));
-    	System.out.println("Four of a kind: " + Rank.isFour(h));
-    	System.out.println("Straight Flush: " + Rank.isStraightFlush(h));
-    	System.out.println("Royal Flush: " + Rank.isRoyal(h));
+    	h.deal();
+    	
+    	ranks r = Rank.rank(h);
+    	
+    	System.out.println(r);
+    	
     	h.printHand();
     }
 
