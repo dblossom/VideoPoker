@@ -7,6 +7,14 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 
+/**
+ * This class represents a deck of cards of standard size (52 cards)
+ * 
+ * TODO: add support for an unshuffled deck.
+ * 
+ * @author Dan Blossom
+ *
+ */
 public class Deck {
 	
 	/**

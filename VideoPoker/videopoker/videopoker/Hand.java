@@ -1,8 +1,14 @@
 package videopoker;
 
+/**
+ * A class that represents a 5 card hand
+ * 
+ * @author Dan Blossom
+ *
+ */
 public class Hand {
 	
-	// A deck of cards
+	// A deck of (suffled) cards
 	Deck deck = new Deck();
 	
 	// An array to hold this hand
@@ -16,8 +22,7 @@ public class Hand {
 	/**
 	 * Deals out the deck - fills the hand array
 	 */
-	public void deal(){
-		
+	public void deal(){		
 		for(int i = 0; i < hand.length; i++){
 			hand[i] = deck.shuffled.remove();
 		}
@@ -28,9 +33,7 @@ public class Hand {
 	 * @param card the card position to be changed
 	 */
 	public void newCard(int card){
-		
 		hand[card] = deck.shuffled.remove();
-		
 	}
 	
 	/**

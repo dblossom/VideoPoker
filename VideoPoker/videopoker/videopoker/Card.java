@@ -1,5 +1,12 @@
 package videopoker;
 
+/**
+ * This class is a wrapper that will represent a playing card.
+ * It will have a value and Suit, which is an enum for playing card suits
+ * 
+ * @author Dan Blossom
+ *
+ */
 public class Card {
 	
 	/**
