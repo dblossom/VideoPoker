@@ -40,9 +40,8 @@ public class Hand {
 	 * Prints out the hand, for testing really
 	 */
 	public void printHand(){
-	    
 		for(Card card: hand){
-		    System.out.println(card.valueToString() + card.suitToChar());
+		    System.out.print(card.valueToString() + card.suitToChar() + " ");
 		}
 	}
 	
@@ -59,9 +58,7 @@ public class Hand {
 		h.printHand();
 		
 		h.newCard(2);
-		
-		System.out.println("-----");
-		
+		System.out.println("");
 		h.printHand();
 		
 	}
