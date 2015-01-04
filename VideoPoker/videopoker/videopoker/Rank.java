@@ -49,6 +49,11 @@ public class Rank {
 		return unsortedhand;
 	}
 	
+	/**
+	 * Given a hand this returns the highest rank possible
+	 * @param hand the hand to evaluate
+	 * @return the highest rank
+	 */
 	public static ranks rank(Hand hand){
 	
 		// so working backwards to find the best hand possible
