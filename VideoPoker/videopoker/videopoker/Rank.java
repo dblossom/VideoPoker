@@ -16,8 +16,6 @@ public class Rank {
 	
 	enum ranks { PAIR, TWO, THREE, STRAIGHT, FLUSH, FULL, FOUR, STRAIGHT_FLUSH, ROYAL }
 	
-	boolean pair, two, three, straight, flush, full, four, straightFlush, royal;
-		
 	/**
 	 * Prevent default constructor
 	 */
@@ -49,9 +47,9 @@ public class Rank {
 		return unsortedhand;
 	}
 	
-	public static void rank(Hand hand){
-		
-	}
+//	public static ranks rank(Hand hand){
+//		return ranks.FLUSH; // just to shut-up the error
+//	}
     
 	/**
 	 * Main method used for testing
@@ -59,19 +57,20 @@ public class Rank {
 	 */
 	public static void main(String[] args){
     	Hand h = new Hand();
-    	h.hand[0] = new Card(Suit.CLUB, Card.JACK);
-    	h.hand[1] = new Card(Suit.CLUB, Card.QUEEN);
+    	h.hand[0] = new Card(Suit.CLUB, 10);
+    	h.hand[1] = new Card(Suit.SPADE, Card.ACE);
     	h.hand[2] = new Card(Suit.CLUB, 10);
     	h.hand[3] = new Card(Suit.CLUB, Card.ACE);
-    	h.hand[4] = new Card(Suit.CLUB, Card.KING);
+    	h.hand[4] = new Card(Suit.CLUB, Card.ACE);
     	
-    	System.out.println(Rank.isPair(h));
-    	System.out.println(Rank.isTwoPair(h));
-    	System.out.println(Rank.isThreeKind(h));
-    	System.out.println(Rank.isStraight(h));
-    	System.out.println(Rank.isFlush(h));
-    	System.out.println(Rank.isStraightFlush(h));
-    	System.out.println(Rank.isRoyal(h));
+    	System.out.println("Pair: " + Rank.isPair(h));
+    	System.out.println("Two Pair: " + Rank.isTwoPair(h));
+    	System.out.println("Three of a kind: " + Rank.isThreeKind(h));
+    	System.out.println("Straight: " + Rank.isStraight(h));
+    	System.out.println("Flush: " + Rank.isFlush(h));
+    	System.out.println("Full House: " + Rank.isFull(h));
+    	System.out.println("Straight Flush: " + Rank.isStraightFlush(h));
+    	System.out.println("Royal Flush: " + Rank.isRoyal(h));
     	h.printHand();
     }
 
@@ -219,9 +218,41 @@ public class Rank {
     }
     
     /**
-     * FULL
+     * Returns if a hand contains a full house
+     * 
+     * @param hand the hand to be tested
+     * @return if the hand contains a full house
      */
-    private static boolean isFull(Hand hand){return false;}
+    private static boolean isFull(Hand hand){
+    	
+    	// if there is not a three of a kind there can be no full house
+    	if(!Rank.isThreeKind(hand)){
+    		return false;
+    	}
+    	
+    	ArrayList<Card> sortedhand = Rank.sort(hand);
+    	
+    	// so we have two situations to look for ...
+    	// AABBB or BBBAA, assuming and since the list is sorted
+    	//-------------------------------------------------------
+    	// so is the three of a kind in locations 2, 3, 4
+    	if(sortedhand.get(2).value == sortedhand.get(4).value){
+    		if(sortedhand.get(0).value == sortedhand.get(1).value){
+    			return true;
+    		}
+    		return false;
+    	}
+    	
+    	// so is the three of a kind in locations 0, 1, 2
+    	if(sortedhand.get(0).value == sortedhand.get(2).value){
+    		if(sortedhand.get(3).value == sortedhand.get(4).value){
+    			return true;
+    		}
+    		return false;
+    	}
+    	// should not get here, but if we do we do not have a full boat
+    	return false;
+    }
     
     /**
      * Four
@@ -240,7 +271,10 @@ public class Rank {
     }
 
     /**
-     * Royal
+     * Returns if a hand contains a Royal flush
+     * 
+     * @param hand the hand to be tested
+     * @return if the hand contains a royal flush
      */
     private static boolean isRoyal(Hand hand){
         // a royal flush IS a straight flush, just higher...
