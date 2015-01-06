@@ -12,7 +12,10 @@ public class JacksGUI extends JFrame {
 
 	JButton quit = new JButton("Quit");
 	JButton deal = new JButton("Deal");
-	GridLayout experimentLayout = new GridLayout(0,5);
+	Image card1, card2, card3, card4, card5;
+	JLabel cardLabel1, cardLabel2, cardLabel3, cardLabel4, cardLabel5;
+	GridLayout cardLayout = new GridLayout(0,5);
+    final JPanel cardArea = new JPanel();
 	    
 	public JacksGUI(String name) {
 	    super(name);
@@ -20,8 +23,8 @@ public class JacksGUI extends JFrame {
 	}
 	    
 	public void addComponentsToPane(final Container pane) {
-	    final JPanel compsToExperiment = new JPanel();
-	    compsToExperiment.setLayout(experimentLayout);
+
+	    cardArea.setLayout(cardLayout);
 	    JPanel controls = new JPanel();
 	    controls.setLayout(new GridLayout(0,5));
 	    
@@ -39,24 +42,8 @@ public class JacksGUI extends JFrame {
                 System.exit(0);
 	        }
 	    });
-	        
-	    //Add buttons to experiment with Grid Layout
-	    Image card1, card2, card3, card4, card5;
-		try {
-			card1 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card2 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card3 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card4 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card5 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-		    compsToExperiment.add(new JLabel(new ImageIcon(card1)));
-		    compsToExperiment.add(new JLabel(new ImageIcon(card2)));
-		    compsToExperiment.add(new JLabel(new ImageIcon(card3)));
-		    compsToExperiment.add(new JLabel(new ImageIcon(card4)));
-		    compsToExperiment.add(new JLabel(new ImageIcon(card5)));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+	    
+	    loadBacks();
 	        
 	    //Add controls to set up horizontal and vertical gaps
 	    controls.add(new JButton("Hold"));
@@ -71,7 +58,7 @@ public class JacksGUI extends JFrame {
                 System.exit(0);
 	        }
 	    });
-	    pane.add(compsToExperiment, BorderLayout.NORTH);
+	    pane.add(cardArea, BorderLayout.NORTH);
 	    pane.add(controls, BorderLayout.CENTER);
 	    pane.add(actionButtons, BorderLayout.SOUTH);
 	}
@@ -90,11 +77,60 @@ public class JacksGUI extends JFrame {
 	private void dealButton(JButton button){
 		button.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent e){
-	    		JacksOrBetter.go();
+                try {
+                	Hand hand = new Hand();
+                	hand.deal();
+                	for(int i = 0; i < 5; i++){
+                		Card card = hand.hand[i];
+                		String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
+                		Image image = ImageIO.read(getClass().getResource(location));
+                		
+                		// have to use an array or something... but for now
+                		if(i == 0)
+                			cardLabel1.setIcon(new ImageIcon(image));
+                		if(i == 1)
+                			cardLabel2.setIcon(new ImageIcon(image));
+                		if(i == 2)
+                			cardLabel3.setIcon(new ImageIcon(image));
+                		if(i == 3)
+                			cardLabel4.setIcon(new ImageIcon(image));
+                		if(i == 4)
+                			cardLabel5.setIcon(new ImageIcon(image));
+                	}
+                }catch(IOException e1) {
+                    e1.printStackTrace();
+                }
 	    	}
 	    });
 	}
-    
+	
+	private void loadBacks(){
+		try {
+			card1 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			card2 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			card3 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			card4 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			card5 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			cardLabel1 = new JLabel(new ImageIcon(card1));
+			cardArea.add(cardLabel1);
+
+			cardLabel2 = new JLabel(new ImageIcon(card2));
+			cardArea.add(cardLabel2);
+			
+			cardLabel3 = new JLabel(new ImageIcon(card3));
+			cardArea.add(cardLabel3);
+			
+			cardLabel4 = new JLabel(new ImageIcon(card4));
+			cardArea.add(cardLabel4);
+			
+			cardLabel5 = new JLabel(new ImageIcon(card5));
+			cardArea.add(cardLabel5);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+		
 	    
 	public static void main(String[] args){
 	
