@@ -8,43 +8,41 @@ public class JacksOrBetter {
 	
 	public static void go(){
 		
-		Scanner scan = new Scanner(System.in);
-		while(true){
+	//	Scanner scan = new Scanner(System.in); 
+		Hand hand = new Hand();
+		hand.deal();
+        Card c = hand.hand[0];
+        System.out.println(c.valueToString() + c.suitToChar());
+	//	hand.printHand();
+	//	System.out.println();
+	//	System.out.println("You have: " + Rank.rank(hand));
+	//	System.out.print("Which cards would you like to hold (enter 0 for none): ");
 		    
-			Hand hand = new Hand();
-		    hand.deal();
-		    hand.printHand();
-		    System.out.println();
-		    System.out.println("You have: " + Rank.rank(hand));
-		    System.out.print("Which cards would you like to hold (enter 0 for none): ");
-		    
-		    int cardsToHold = scan.nextInt();
+	//	int cardsToHold = scan.nextInt();
 
-		    if(cardsToHold == 0){
-			    for(int i = 0; i < 5; i++){
-				    hand.newCard(i);
-			    }
-		    }else{
-			    int heldCards[] = JacksOrBetter.toHoldArray(cardsToHold);
-			    for(int i = 0; i < 5; i++){
-				    boolean held = false;
-				    for(int e: heldCards){
-					    if(e==i+1){
-						    held = true;
-						    break;
-					    }
-				    }
-				    if(!held){
-					    hand.newCard(i);
-				    }
-			    }
-			
-		    }
-		    System.out.println("Now you have: " + Rank.rank(hand));
-		    hand.printHand();
-		    System.out.println();
-		    System.out.println("--------------------------------");
-		}
+//		if(cardsToHold == 0){
+//		    for(int i = 0; i < 5; i++){
+//			    hand.newCard(i);
+//			   }
+//		}else{
+//		    int heldCards[] = JacksOrBetter.toHoldArray(cardsToHold);
+//		    for(int i = 0; i < 5; i++){
+//			    boolean held = false;
+//			    for(int e: heldCards){
+//				    if(e==i+1){
+//					    held = true;
+//					    break;
+//				    }
+//			    }
+//			    if(!held){
+//				    hand.newCard(i);
+//			    }
+//		    }
+//			
+//		}
+//		System.out.println("Now you have: " + Rank.rank(hand));
+//		hand.printHand();
+//		System.out.println();
 		//scan.close();
 	}
 	

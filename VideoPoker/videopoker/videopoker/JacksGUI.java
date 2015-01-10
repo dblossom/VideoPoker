@@ -8,10 +8,30 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+ * A class that will load a GUI so you can play Jacks or better
+ * 
+ * TODO: Refactor most of this code, it is all bandaid to get it
+ *       to work first.
+ *       
+ * @author Dan Blossom
+ *
+ */
 public class JacksGUI extends JFrame {
+	
+	Hand hand = new Hand();
 
 	JButton quit = new JButton("Quit");
 	JButton deal = new JButton("Deal");
+	
+	JButton hold1 = new JButton("Hold");
+	JButton hold2 = new JButton("Hold");
+	JButton hold3 = new JButton("Hold");
+	JButton hold4 = new JButton("Hold");
+	JButton hold5 = new JButton("Hold");
+	
+	boolean held1, held2, held3, held4, held5;
+	
 	Image card1, card2, card3, card4, card5;
 	JLabel cardLabel1, cardLabel2, cardLabel3, cardLabel4, cardLabel5;
 	GridLayout cardLayout = new GridLayout(0,5);
@@ -36,28 +56,24 @@ public class JacksGUI extends JFrame {
 	    
 	    dealButton(deal);
 	    
-	    //quit
-	    quit.addActionListener(new ActionListener(){
-	        public void actionPerformed(ActionEvent e){
-                System.exit(0);
-	        }
-	    });
+	    quitButtonClick(quit);
 	    
 	    loadBacks();
 	        
 	    //Add controls to set up horizontal and vertical gaps
-	    controls.add(new JButton("Hold"));
-	    controls.add(new JButton("Hold"));
-	    controls.add(new JButton("Hold"));
-	    controls.add(new JButton("Hold"));
-	    controls.add(new JButton("Hold"));
-	        
-	    //quit
-	    quit.addActionListener(new ActionListener(){
-	        public void actionPerformed(ActionEvent e){
-                System.exit(0);
-	        }
-	    });
+	    controls.add(hold1);
+	    controls.add(hold2);
+	    controls.add(hold3);
+	    controls.add(hold4);
+	    controls.add(hold5);
+	    
+	    holdButtonClick(hold1);
+	    holdButtonClick(hold2);
+	    holdButtonClick(hold3);
+	    holdButtonClick(hold4);
+	    holdButtonClick(hold5);
+	    
+
 	    pane.add(cardArea, BorderLayout.NORTH);
 	    pane.add(controls, BorderLayout.CENTER);
 	    pane.add(actionButtons, BorderLayout.SOUTH);
@@ -75,33 +91,102 @@ public class JacksGUI extends JFrame {
 	}
 	
 	private void dealButton(JButton button){
-		button.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent e){
-                try {
-                	Hand hand = new Hand();
-                	hand.deal();
-                	for(int i = 0; i < 5; i++){
-                		Card card = hand.hand[i];
-                		String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
-                		Image image = ImageIO.read(getClass().getResource(location));
+		
+        button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+        		if(button.getText().equalsIgnoreCase("Deal")){
+        			deal(button);
+        			return;
+        		}
+        		if(button.getText().equalsIgnoreCase("Draw")){
+        			draw(button);
+        			return;
+        		}
+            }
+        });
+	}
+	
+	private void deal(JButton button){
+		held1 = false;
+		held2 = false;
+		held3 = false;
+		held4 = false;
+		held5 = false;
+        try{
+            hand.deal();
+            for(int i = 0; i < 5; i++){
+                Card card = hand.hand[i];
+                String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
+                Image image = ImageIO.read(getClass().getResource(location));
                 		
-                		// have to use an array or something... but for now
-                		if(i == 0)
-                			cardLabel1.setIcon(new ImageIcon(image));
-                		if(i == 1)
-                			cardLabel2.setIcon(new ImageIcon(image));
-                		if(i == 2)
-                			cardLabel3.setIcon(new ImageIcon(image));
-                		if(i == 3)
-                			cardLabel4.setIcon(new ImageIcon(image));
-                		if(i == 4)
-                			cardLabel5.setIcon(new ImageIcon(image));
-                	}
-                }catch(IOException e1) {
-                    e1.printStackTrace();
-                }
-	    	}
-	    });
+                // have to use an array or something... but for now
+                if(i == 0)
+                    cardLabel1.setIcon(new ImageIcon(image));
+                if(i == 1)
+                    cardLabel2.setIcon(new ImageIcon(image));
+                if(i == 2)
+                    cardLabel3.setIcon(new ImageIcon(image));
+                if(i == 3)
+                    cardLabel4.setIcon(new ImageIcon(image));
+                if(i == 4)
+                    cardLabel5.setIcon(new ImageIcon(image));
+             }
+             deal.setText("Draw");
+         }catch(IOException e1) {
+             e1.printStackTrace();
+         }
+	}
+	
+	private void draw(JButton button){
+		button.setText("Deal");
+		
+		// hmm is there a better way?
+		if(!held1){
+			changeCards(0);
+		}
+		if(!held2){
+			changeCards(1);
+		}
+		if(!held3){
+			changeCards(2);
+		}
+		if(!held4){
+			changeCards(3);
+		}
+		if(!held5){
+			changeCards(4);
+		}
+	}
+	
+	private void changeCards(int i){
+		hand.newCard(i);
+		Card card = hand.hand[i];
+		String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
+		
+		try{
+		    Image image = ImageIO.read(getClass().getResource(location));
+		    if(i == 0)
+                cardLabel1.setIcon(new ImageIcon(image));
+            if(i == 1)
+                cardLabel2.setIcon(new ImageIcon(image));
+            if(i == 2)
+                cardLabel3.setIcon(new ImageIcon(image));
+            if(i == 3)
+                cardLabel4.setIcon(new ImageIcon(image));
+            if(i == 4)
+                cardLabel5.setIcon(new ImageIcon(image));
+		}catch(IOException el){
+			el.printStackTrace();
+		}
+	}
+	
+	private void quitButtonClick(JButton button){
+
+        button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                System.exit(0);
+            }
+        });
 	}
 	
 	private void loadBacks(){
@@ -129,6 +214,29 @@ public class JacksGUI extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+	}
+	
+	private void holdButtonClick(JButton button){
+        button.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                // UGH!
+            	if(button == hold1){
+                    held1 = true;
+                }
+                if(button == hold2){
+                	held2 = true;
+                }
+                if(button == hold3){
+                	held3 = true;
+                }
+                if(button == hold4){
+                	held4 = true;
+                }
+                if(button == hold5){
+                	held5 = true;
+                }
+            }
+        });
 	}
 		
 	    
