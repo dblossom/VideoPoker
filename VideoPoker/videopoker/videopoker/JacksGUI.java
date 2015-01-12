@@ -119,6 +119,7 @@ public class JacksGUI extends JFrame {
 		hold3.setText("Hold");
 		hold4.setText("Hold");
 		hold5.setText("Hold");
+		hand = new Hand();
         try{
             hand.deal();
             for(int i = 0; i < 5; i++){
