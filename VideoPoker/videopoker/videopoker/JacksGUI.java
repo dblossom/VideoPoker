@@ -8,6 +8,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+import videopoker.Rank.ranks; // why ?
+
 /**
  * A class that will load a GUI so you can play Jacks or better
  * 
@@ -112,6 +114,11 @@ public class JacksGUI extends JFrame {
 		held3 = false;
 		held4 = false;
 		held5 = false;
+		hold1.setText("Hold");
+		hold2.setText("Hold");
+		hold3.setText("Hold");
+		hold4.setText("Hold");
+		hold5.setText("Hold");
         try{
             hand.deal();
             for(int i = 0; i < 5; i++){
@@ -156,6 +163,11 @@ public class JacksGUI extends JFrame {
 		if(!held5){
 			changeCards(4);
 		}
+		
+		ranks r = Rank.rank(hand);
+		
+		JOptionPane.showMessageDialog(null,"Congrats you got a " + r);
+		
 	}
 	
 	private void changeCards(int i){
@@ -219,26 +231,69 @@ public class JacksGUI extends JFrame {
 	private void holdButtonClick(JButton button){
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                // UGH!
-            	if(button == hold1){
-                    held1 = true;
-                }
-                if(button == hold2){
-                	held2 = true;
-                }
-                if(button == hold3){
-                	held3 = true;
-                }
-                if(button == hold4){
-                	held4 = true;
-                }
-                if(button == hold5){
-                	held5 = true;
-                }
+            	
+            	if(button.getText().equalsIgnoreCase("Hold")){
+            		hold(button);
+            		return;
+            	}
+            	
+            	if(button.getText().equalsIgnoreCase("Held")){
+            		unhold(button);
+            		return;
+            	}
+
             }
         });
 	}
+	
+	private void hold(JButton button){
+        // UGH!
+    	if(button == hold1){
+            held1 = true;
+            hold1.setText("Held");
+        }
+        if(button == hold2){
+        	held2 = true;
+            hold2.setText("Held");
+        }
+        if(button == hold3){
+        	held3 = true;
+            hold3.setText("Held");
+        }
+        if(button == hold4){
+        	held4 = true;
+            hold4.setText("Held");
+        }
+        if(button == hold5){
+        	held5 = true;
+            hold5.setText("Held");
+        }
+	}
+	
+	private void unhold(JButton button){
+        // UGH!
+    	if(button == hold1){
+            held1 = false;
+            hold1.setText("Hold");
+        }
+        if(button == hold2){
+        	held2 = false;
+            hold2.setText("Hold");
+        }
+        if(button == hold3){
+        	held3 = false;
+            hold3.setText("Hold");
+        }
+        if(button == hold4){
+        	held4 = false;
+            hold4.setText("Hold");
+        }
+        if(button == hold5){
+        	held5 = false;
+            hold5.setText("Hold");
+        }
 		
+	}
 	    
 	public static void main(String[] args){
 	
