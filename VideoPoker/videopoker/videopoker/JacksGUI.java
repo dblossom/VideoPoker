@@ -49,25 +49,32 @@ public class JacksGUI extends JFrame {
 	boolean held1, held2, held3, held4, held5;
 	
 	// used for displaying the card to the player
-	JLabel cardLabel1, cardLabel2, cardLabel3, cardLabel4, cardLabel5;
+	JLabel[] cardLabel = new JLabel[5];
 	
 	/**
 	 * One of the layouts and the panel --- this might be moved?
 	 */
 	GridLayout cardLayout = new GridLayout(0,5);
 
-	    
+	/**
+	 * Basic constructor that calls its super and setsResiable to false..
+	 * @param name for the title bar
+	 */
 	public JacksGUI(String name) {
 	    super(name);
 	    setResizable(false);
 	}
 	    
+	/**
+	 * Adds components to the main pane
+	 * @param pane the pane to add the componets too.
+	 */
 	public void addComponentsToPane(final Container pane) {
         
 		// Panels needed for game layout
 	    JPanel controls = new JPanel();
 	    JPanel actionButtons = new JPanel();
-	    final JPanel cardArea = new JPanel();
+	    final JPanel cardArea = new JPanel(); // can I remove final?
 		
 	    // set the layouts of the three panels
 	    cardArea.setLayout(cardLayout);
@@ -90,6 +97,10 @@ public class JacksGUI extends JFrame {
 	    pane.add(actionButtons, BorderLayout.SOUTH);
 	}
 	    
+	/**
+	 * Exactly what is says, calls constructor, sets default close and adds
+	 * the getContentPane to the pane ... pack it up and setVisible
+	 */
 	private static void createAndShowGUI() {
 	    //Create and set up the window.
 	    JacksGUI frame = new JacksGUI("Jacks or better");
@@ -101,15 +112,24 @@ public class JacksGUI extends JFrame {
 	    frame.setVisible(true);
 	}
 	
+	/**
+	 * The action listener for the deal button
+	 * @param button the button to listen
+	 */
 	private void dealButton(JButton button){
 		
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
+            	// so, if the text is deal than game is new so ..
         		if(button.getText().equalsIgnoreCase("Deal")){
+        			// call out deal method and return
         			deal(button);
         			return;
         		}
+        		// if the text is draw, the player has the option to
+        		// change a up to 5 cards -- or none at all so ..
         		if(button.getText().equalsIgnoreCase("Draw")){
+        			// call our draw method and return
         			draw(button);
         			return;
         		}
@@ -117,29 +137,29 @@ public class JacksGUI extends JFrame {
         });
 	}
 	
+	/**
+	 * Our deal button, called when the deal button is clicked and the text
+	 * displayed is "deal"
+	 * @param button the deal button
+	 */
 	private void deal(JButton button){
 		
+		// first we want to clear any held card positions from a previous game (or maybe this is the first game)
 		setHeldsFalse();
+		// then we also want to set the text on the buttons to say "Hold" rather than held, if it was previously held
 		setHoldButtonTextHold();
 
+		// here we want to set up the hand to play
 		hand = new Hand();
         try{
+        	// "deal()" basically fills our array with the first 5 cards from the top of the queue - all hidden tho.
             hand.deal();
+            
             for(int i = 0; i < 5; i++){
                 Card card = hand.hand[i];
                 String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
                 Image image = ImageIO.read(getClass().getResource(location));
-                // have to use an array or something... but for now
-                if(i == 0)
-                    cardLabel1.setIcon(new ImageIcon(image));
-                if(i == 1)
-                    cardLabel2.setIcon(new ImageIcon(image));
-                if(i == 2)
-                    cardLabel3.setIcon(new ImageIcon(image));
-                if(i == 3)
-                    cardLabel4.setIcon(new ImageIcon(image));
-                if(i == 4)
-                    cardLabel5.setIcon(new ImageIcon(image));
+                cardLabel[i].setIcon(new ImageIcon(image));
              }
              deal.setText("Draw");
          }catch(IOException e1) {
@@ -183,16 +203,7 @@ public class JacksGUI extends JFrame {
 		
 		try{
 		    Image image = ImageIO.read(getClass().getResource(location));
-		    if(i == 0)
-                cardLabel1.setIcon(new ImageIcon(image));
-            if(i == 1)
-                cardLabel2.setIcon(new ImageIcon(image));
-            if(i == 2)
-                cardLabel3.setIcon(new ImageIcon(image));
-            if(i == 3)
-                cardLabel4.setIcon(new ImageIcon(image));
-            if(i == 4)
-                cardLabel5.setIcon(new ImageIcon(image));
+            cardLabel[i].setIcon(new ImageIcon(image));
 		}catch(IOException el){
 			el.printStackTrace();
 		}
@@ -210,27 +221,13 @@ public class JacksGUI extends JFrame {
 	private void loadBacks(JPanel panel){
 		try {
 			
-			Image card1, card2, card3, card4, card5;
-			card1 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card2 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card3 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card4 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			card5 = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
+			Image cardback = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
 			
-			cardLabel1 = new JLabel(new ImageIcon(card1));
-			panel.add(cardLabel1);
+			for(int i = 0; i < cardLabel.length; i++){
+				cardLabel[i] = new JLabel(new ImageIcon(cardback));
+				panel.add(cardLabel[i]);
+			}
 
-			cardLabel2 = new JLabel(new ImageIcon(card2));
-			panel.add(cardLabel2);
-			
-			cardLabel3 = new JLabel(new ImageIcon(card3));
-			panel.add(cardLabel3);
-			
-			cardLabel4 = new JLabel(new ImageIcon(card4));
-			panel.add(cardLabel4);
-			
-			cardLabel5 = new JLabel(new ImageIcon(card5));
-			panel.add(cardLabel5);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
