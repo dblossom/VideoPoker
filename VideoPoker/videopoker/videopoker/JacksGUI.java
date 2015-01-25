@@ -19,6 +19,7 @@ import videopoker.Rank.ranks; // why ?
  * @author Dan Blossom
  *
  */
+@SuppressWarnings("serial") // nothing to serialize ... 
 public class JacksGUI extends JFrame {
 	
 	// needed to create a hand for game play
@@ -31,22 +32,14 @@ public class JacksGUI extends JFrame {
 	// The text will change during game play
 	JButton deal = new JButton("Deal");
 	
-	/**
-	 * Set of buttons used for determining which cards to "hold"
-	 * Also text changes to "held" when a card is held
-	 * TODO: they need this "global" ? 
-	 */
-	JButton hold1 = new JButton("Hold");
-	JButton hold2 = new JButton("Hold");
-	JButton hold3 = new JButton("Hold");
-	JButton hold4 = new JButton("Hold");
-	JButton hold5 = new JButton("Hold");
+    // hold buttons used for player to "hold" card
+	JButton[] hold = new JButton[5];
 	
 	// used for displaying the ranking of a hand.
 	JLabel handrank = new JLabel("");
 	
 	// booleans used to determine if a card is held or not
-	boolean held1, held2, held3, held4, held5;
+	boolean[] held = new boolean[5];
 	
 	// used for displaying the card to the player
 	JLabel[] cardLabel = new JLabel[5];
@@ -155,52 +148,57 @@ public class JacksGUI extends JFrame {
         	// "deal()" basically fills our array with the first 5 cards from the top of the queue - all hidden tho.
             hand.deal();
             
+            // print the hand to the screen
             for(int i = 0; i < 5; i++){
                 Card card = hand.hand[i];
                 String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
                 Image image = ImageIO.read(getClass().getResource(location));
                 cardLabel[i].setIcon(new ImageIcon(image));
              }
+            // change the text of the deal button to draw
              deal.setText("Draw");
          }catch(IOException e1) {
              e1.printStackTrace();
          }
-        
+        // gets the players rank and prints it to the screen
 		ranks r = Rank.rank(hand);
-		
 		handrank.setText(r+"");
 	}
 	
+	/**
+	 * Our draw button, when called it will reset the text back to "Deal"
+	 * then it will provide new cards the player requested by not saying hold
+	 * @param button the draw / deal button
+	 */
 	private void draw(JButton button){
+		// reset the deal button text
 		button.setText("Deal");
 		
-		// hmm is there a better way?
-		if(!held1){
-			changeCards(0);
+		// loop over the held booleans and if we
+		// do not hold a card, give the player another
+		for(int i = 0; i < held.length; i++){
+			if(!held[i])
+				changeCards(i);
 		}
-		if(!held2){
-			changeCards(1);
-		}
-		if(!held3){
-			changeCards(2);
-		}
-		if(!held4){
-			changeCards(3);
-		}
-		if(!held5){
-			changeCards(4);
-		}
-		
+		// get the rank of the hand
 		ranks r = Rank.rank(hand);
-		
+		// display that rank to player
 		handrank.setText(r+"");
 	}
 	
+	/**
+	 * Given a ZERO based card in an hand, it will replace that card with the
+	 * the next card in the hand
+	 * @param i the zero-based card number... IE: n-1, IE: card 1 is 0 (zero).
+	 */
 	private void changeCards(int i){
+		// replace the card at position i
 		hand.newCard(i);
+		// get that new card
 		Card card = hand.hand[i];
+		// get an image that visually represents that card
 		String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";
-		
+		// update the image on the GUI
 		try{
 		    Image image = ImageIO.read(getClass().getResource(location));
             cardLabel[i].setIcon(new ImageIcon(image));
@@ -209,8 +207,11 @@ public class JacksGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * A quit button, not much to say
+	 * @param button the quit button
+	 */
 	private void quitButtonClick(JButton button){
-
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 System.exit(0);
@@ -218,31 +219,40 @@ public class JacksGUI extends JFrame {
         });
 	}
 	
+	/**
+	 * Loads the five cards to display their backs, used when starting the first game
+	 * @param panel the panel to display the cards on
+	 */
 	private void loadBacks(JPanel panel){
 		try {
-			
+			// get the card back image
 			Image cardback = ImageIO.read(getClass().getResource("/images/cards/back/b1fv.png"));
-			
+			// for each label that represents a card, have it display the above image
 			for(int i = 0; i < cardLabel.length; i++){
 				cardLabel[i] = new JLabel(new ImageIcon(cardback));
 				panel.add(cardLabel[i]);
 			}
-
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
 	
+	/**
+	 * The action listener for the hold buttons
+	 * @param button what hold button was clicked.
+	 */
 	private void holdButtonClick(JButton button){
         button.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-            	
+            	// if the button text is Hold that implies it has
+            	// not been selected - call the hold function
             	if(button.getText().equalsIgnoreCase("Hold")){
+            		// call the hold function
             		hold(button);
             		return;
             	}
-            	
+            	// if the text says "Held" then player might have
+            	// changed his/her mind, so call unhold(button)
             	if(button.getText().equalsIgnoreCase("Held")){
             		unhold(button);
             		return;
@@ -257,32 +267,21 @@ public class JacksGUI extends JFrame {
 	 * be discarded when the player is given the opportunity
 	 * to hold cards and draw
 	 * 
-	 * TODO: is there another solution, I do not like the 5 if's
-	 * 
 	 * @param button the button that was clicked to indicate hold this card
 	 */
 	private void hold(JButton button){
+		// loop over the hold button array to
+		// determine which button was clicked
+		// set the corresponding "held" to true
+		// button text to Held and break.
+		for(int i = 0; i < held.length; i++){
+			if(button == hold[i]){
+				held[i] = true;
+				hold[i].setText("Held");
+				break;
+			}
+		}
 
-    	if(button == hold1){
-            held1 = true;
-            hold1.setText("Held");
-        }
-        if(button == hold2){
-        	held2 = true;
-            hold2.setText("Held");
-        }
-        if(button == hold3){
-        	held3 = true;
-            hold3.setText("Held");
-        }
-        if(button == hold4){
-        	held4 = true;
-            hold4.setText("Held");
-        }
-        if(button == hold5){
-        	held5 = true;
-            hold5.setText("Held");
-        }
 	}
 	
 	/**
@@ -296,54 +295,42 @@ public class JacksGUI extends JFrame {
 	 * @param button the button to unhold
 	 */
 	private void unhold(JButton button){
-    	if(button == hold1){
-            held1 = false;
-            hold1.setText("Hold");
-        }
-        if(button == hold2){
-        	held2 = false;
-            hold2.setText("Hold");
-        }
-        if(button == hold3){
-        	held3 = false;
-            hold3.setText("Hold");
-        }
-        if(button == hold4){
-        	held4 = false;
-            hold4.setText("Hold");
-        }
-        if(button == hold5){
-        	held5 = false;
-            hold5.setText("Hold");
-        }
+		// this will loop over the hold button array
+		// and find the match to the passed in button
+		// it will set its corresponding held boolean
+		// to false and change the button text to Hold
+		for(int i = 0; i < held.length; i++){
+			if(button == hold[i]){
+				held[i] = false;
+				hold[i].setText("Hold");
+				break;
+			}
+		}
 		
 	}
 	
 	/**
-	 * This will set all the "held" booleans to false
-	 * used mainly at a new deal...
+	 * This will set all the "held" booleans in an
+	 * array to false used mainly at a new deal...
 	 */
 	private void setHeldsFalse(){
-		held1 = false;
-		held2 = false;
-		held3 = false;
-		held4 = false;
-		held5 = false;
+		for(int i = 0; i < held.length; i++){
+			held[i] = false;
+		}
 	}
 	
 	/**
 	 * This will set the hold buttons test to the default "hold"
 	 */
 	private void setHoldButtonTextHold(){
-		hold1.setText("Hold");
-		hold2.setText("Hold");
-		hold3.setText("Hold");
-		hold4.setText("Hold");
-		hold5.setText("Hold");
+		for(int i = 0; i < hold.length; i++){
+			hold[i].setText("Hold");
+		}
 	}
 	
 	/**
 	 * Adds the action buttons to the action panel
+	 * @parm panel the panel to add stuff
 	 */
 	private void addActionButtons(JPanel panel){
 		panel.add(new JLabel("Your hand is: "));
@@ -352,24 +339,41 @@ public class JacksGUI extends JFrame {
 		panel.add(deal);
 	}
 	
+	/**
+	 * Adds the hold buttons to the action panel
+	 * @param panel the panel to add stuff
+	 */
 	private void addControlButtons(JPanel panel){
-		panel.add(hold1);
-		panel.add(hold2);
-	    panel.add(hold3);
-	    panel.add(hold4);
-	    panel.add(hold5);
+		for(int i = 0; i < hold.length; i++){
+			hold[i] = new JButton("Hold");
+			panel.add(hold[i]);
+		}
 	}
 	
+	/**
+	 * Sets all action listeners needed for all the buttons
+	 */
 	private void setActionListeners(){
-	    holdButtonClick(hold1);
-	    holdButtonClick(hold2);
-	    holdButtonClick(hold3);
-	    holdButtonClick(hold4);
-	    holdButtonClick(hold5);
+		// since hold buttons is an array
+		setHoldActionListeners();
+		// call the deal and quit action listeners
         dealButton(deal);
         quitButtonClick(quit);
 	}
+	
+	/**
+	 * Sets the hold button action listeners
+	 */
+	private void setHoldActionListeners(){
+		for(int i = 0; i < hold.length; i++){
+			holdButtonClick(hold[i]);
+		}
+	}
 	    
+	/**
+	 * Main
+	 * @param args
+	 */
 	public static void main(String[] args){
 	
 	    /* Use an appropriate Look and Feel */
