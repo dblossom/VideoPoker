@@ -12,12 +12,8 @@ import videopoker.Rank.ranks; // why ?
 
 /**
  * A class that will load a GUI so you can play Jacks or better
- * 
- * TODO: Refactor most of this code, it is all bandaid to get it
- *       to work first.
  *       
  * @author Dan Blossom
- *
  */
 @SuppressWarnings("serial") // nothing to serialize ... 
 public class JacksGUI extends JFrame {
