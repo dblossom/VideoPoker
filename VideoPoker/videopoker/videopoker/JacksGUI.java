@@ -4,6 +4,7 @@ package videopoker;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,11 +35,17 @@ public class JacksGUI extends JFrame {
 	// used for displaying the ranking of a hand.
 	JLabel handrank = new JLabel("");
 	
-	// booleans used to determine if a card is held or not
-	boolean[] held = new boolean[5];
+	// used for displaying the players bankroll
+	JLabel bankroll = new JLabel("");
 	
 	// used for displaying the card to the player
 	JLabel[] cardLabel = new JLabel[5];
+	
+	// booleans used to determine if a card is held or not
+	boolean[] held = new boolean[5];
+	
+	// used to keep track of a player money
+	Money bank = new Money();
 	
 	/**
 	 * One of the layouts and the panel --- this might be moved?
@@ -68,7 +75,7 @@ public class JacksGUI extends JFrame {
 	    // set the layouts of the three panels
 	    cardArea.setLayout(cardLayout);
 	    controls.setLayout(new GridLayout(0,5));
-	    actionButtons.setLayout(new GridLayout(2,2));
+	    actionButtons.setLayout(new GridLayout(3,2));
 	    
 	    // add the buttons to their respective layouts
 	    addActionButtons(actionButtons);
@@ -178,8 +185,20 @@ public class JacksGUI extends JFrame {
 		}
 		// get the rank of the hand
 		ranks r = Rank.rank(hand);
+		
+		if(r == ranks.HIGH){
+			bank.lose(1.);
+		}else if(r == ranks.PAIR && !isJacksOrHigher(hand)){
+			bank.lose(1.);
+		}else{
+			bank.win(1.);
+		}
+		
 		// display that rank to player
 		handrank.setText(r+"");
+		
+		// for a quick test
+		bankroll.setText(bank.cash());
 	}
 	
 	/**
@@ -331,6 +350,8 @@ public class JacksGUI extends JFrame {
 	private void addActionButtons(JPanel panel){
 		panel.add(new JLabel("Your hand is: "));
 		panel.add(handrank);
+		panel.add(new JLabel("Your bankroll is: "));
+		panel.add(bankroll);
 		panel.add(quit);
 		panel.add(deal);
 	}
@@ -364,6 +385,29 @@ public class JacksGUI extends JFrame {
 		for(int i = 0; i < hold.length; i++){
 			holdButtonClick(hold[i]);
 		}
+	}
+	
+	/**
+	 * Determines if the pair is jacks or higher
+	 */
+	private boolean isJacksOrHigher(Hand hand){
+		
+		ArrayList<Card> sortedHand = Rank.sort(hand);
+		int position = 0;
+		
+        while(position < 4){
+        	// if the current and the next match, we found the pair...
+        	if(sortedHand.get(position).value == sortedHand.get(++position).value){
+        		// now is that pair jacks or higher?
+        		if(sortedHand.get(position).value >= Card.JACK || sortedHand.get(position).value == Card.ACE){
+        			return true;
+        		}
+        		// other wise it is less than Jacks and this game is JACKS OR BETTER
+        		return false;
+        	}	
+        }
+		// should not get here ..
+		return false;
 	}
 	    
 	/**
