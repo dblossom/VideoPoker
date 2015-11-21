@@ -2,7 +2,9 @@ package videopoker;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
@@ -15,7 +17,7 @@ import java.util.Random;
  * @author Dan Blossom
  *
  */
-public class Deck {
+public class Deck{
 	
 	/**
 	 * The original deck
@@ -55,12 +57,20 @@ public class Deck {
 	 * Shuffles a deck
 	 */
 	void shuffle(){
-		Random shuffle = new Random(new GregorianCalendar().getTimeInMillis());
 		while(unshuffled.size() != 0){
+			Random shuffle = new Random(new GregorianCalendar().getTimeInMillis());
 			int next = shuffle.nextInt(unshuffled.size());
 			shuffled.add(unshuffled.remove(next));
 		}
 	}
+	
+	/**
+	 * Removes card from top of deck ...
+	 * To increase "ramdomness" we will run a simple
+	 * random algorithm again ... 
+	 */
+	
+	
 	
 	/**
 	 * Simple tests

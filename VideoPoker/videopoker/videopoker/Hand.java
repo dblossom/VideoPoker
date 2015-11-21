@@ -1,5 +1,7 @@
 package videopoker;
 
+import java.util.ArrayList;
+
 /**
  * A class that represents a 5 card hand
  * 
@@ -43,6 +45,29 @@ public class Hand {
 		for(Card card: hand){
 		    System.out.print(card.valueToString() + card.suitToChar() + " ");
 		}
+	}
+	
+	/**
+	 * Determines if the pair is jacks or higher
+	 */
+	public boolean isJacksOrHigher(){
+		
+		ArrayList<Card> sortedHand = Rank.sort(this);
+		int position = 0;
+		
+        while(position < 4){
+        	// if the current and the next match, we found the pair...
+        	if(sortedHand.get(position).value == sortedHand.get(++position).value){
+        		// now is that pair jacks or higher?
+        		if(sortedHand.get(position).value >= Card.JACK || sortedHand.get(position).value == Card.ACE){
+        			return true;
+        		}
+        		// other wise it is less than Jacks and this game is JACKS OR BETTER
+        		return false;
+        	}	
+        }
+		// should not get here ..
+		return false;
 	}
 	
 	/**
