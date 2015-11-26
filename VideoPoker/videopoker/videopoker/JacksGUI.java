@@ -1,3 +1,20 @@
+/**
+ * A class that be the GUI for the video poker game
+ * It will for better or worse, attempt to look like
+ * the traditional video poker screen seen in most Casinos.
+ * 
+ * @author Dan Blossom
+ */
+
+/**
+ * TODO LIST:
+ * 
+ * 1) Create a default font
+ * 2) Create "bet" word and a variable for bet amount
+ * 3) Create "deal/draw" button
+ * 4) Download/Find new cards that will not look pixelated
+ */
+
 package videopoker;
 
 import java.awt.Color;
@@ -17,9 +34,11 @@ public class JacksGUI extends JFrame{
 	private final int WIDTH = 700;
 	private final int HEIGHT = 600;
 	
-	/**
-	 * 
-	 */
+	// A bet amount
+	private int betAmount = 0;
+	
+	// The default font
+//	private final Font DEFAULT_FONT; //TODO
 	
 	/**
 	 * The default constructor for this frame
@@ -35,13 +54,26 @@ public class JacksGUI extends JFrame{
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		payout(g);
+		handLabel(g);
+		betLabel(g);
 		// this should be in init() but init doesn;t have Graphics parameter...
 		loadBacks(g);
 	}
 	
-	/**
-	 * Payout printout
-	 */
+	private void handLabel(Graphics g){
+		g.setFont(new Font("default", Font.BOLD, 16));
+		g.setColor(Color.RED);
+		// this is just for testing....
+		g.drawString("JACKS OR BETTER", (this.WIDTH / 2) - 125, 280);
+		
+	}
+	
+	private void betLabel(Graphics g){
+		g.setFont(new Font("default", Font.BOLD, 16));
+		g.setColor(Color.WHITE);
+		g.drawString("Bet " + this.betAmount, (this.WIDTH / 2) - 35, 515);
+	}
+	
 	private void payout(Graphics g){
 		g.setFont(new Font("default", Font.BOLD, 16));
 		g.setColor(Color.YELLOW);
@@ -105,16 +137,6 @@ public class JacksGUI extends JFrame{
 	}
 	
 	/**
-	 * Method used for initalizing this frame
-	 */
-	private void init(){
-		this.setSize(this.WIDTH, this.HEIGHT);
-		this.setResizable(false);
-		this.setTitle("Jacks or better");
-		this.setVisible(true);
-	}
-	
-	/**
 	 * Method used for printing the backs
 	 */
 	private void loadBacks(Graphics g){
@@ -141,6 +163,16 @@ public class JacksGUI extends JFrame{
 	 */
 	private void buttons(Graphics g){
 		
+	}
+	
+	/**
+	 * Method used for initalizing this frame
+	 */
+	private void init(){
+		this.setSize(this.WIDTH, this.HEIGHT);
+		this.setResizable(false);
+		this.setTitle("Jacks or better");
+		this.setVisible(true);
 	}
 	
 	/**
