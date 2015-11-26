@@ -35,9 +35,8 @@ public class JacksGUI extends JFrame{
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, this.WIDTH, this.HEIGHT);
 		payout(g);
-		
-		// JUST FOR TESTING
-		cards(g);
+		// this should be in init() but init doesn;t have Graphics parameter...
+		loadBacks(g);
 	}
 	
 	/**
@@ -72,13 +71,11 @@ public class JacksGUI extends JFrame{
 	}
 	
 	private String padDots(int numDots){
-		StringBuilder sb = new StringBuilder();
-		
+		StringBuilder sb = new StringBuilder();	
 		while(numDots > 0){
 			sb.append(".");
 			numDots--;
-		}
-		
+		}	
 		return sb.toString();
 	}
 	
@@ -86,33 +83,25 @@ public class JacksGUI extends JFrame{
 	 * Lays out the cards
 	 * @throws IOException 
 	 */
-	private void cards(Graphics g) {
+	private void cards(Graphics g, Hand hand) {
 		
-		String location = "/images/cards/back/b1fv.png";
-		String location1 = "/images/cards/front/10H.png";
-		Image img;
-		Image img1;
 		int cWidth = 120;
 		int cHeight = 170;
 		int yLoc = 325;
-		int xLoc = 20;
-		int xLocGap = 135;
+        // (135*n)+20
+		int xLoc[] = {20, 155, 290, 425, 560};
 		
 		try {
-			img = ImageIO.read(getClass().getResource(location));
-			img1 = ImageIO.read(getClass().getResource(location1));
-			//g.drawImage(img1, 25, 300, null);
-			g.drawImage(img, xLoc, yLoc, 120, 170, null);
-			g.drawImage(img, xLoc+xLocGap, yLoc, 120, 170, null);
-			g.drawImage(img, xLoc+(xLocGap*2), yLoc, 120, 170, null);
-			g.drawImage(img, xLoc+(xLocGap*3), yLoc, 120, 170, null);
-			g.drawImage(img1, xLoc+(xLocGap*4), yLoc, 120, 170, null);
+			// wanted to do a for-each but then I'd still need a counter for the xLoc array.
+			for(int i = 0; i < hand.hand.length; i++){
+				Card card = hand.hand[i];
+			    String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";	
+				Image img = ImageIO.read(getClass().getResource(location));
+				g.drawImage(img, xLoc[i], yLoc, cWidth, cHeight, null);	
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		
 	}
 	
 	/**
@@ -126,17 +115,33 @@ public class JacksGUI extends JFrame{
 	}
 	
 	/**
+	 * Method used for printing the backs
+	 */
+	private void loadBacks(Graphics g){
+		int cWidth = 120;
+		int cHeight = 170;
+		int yLoc = 325;
+        // (135*n)+20
+		int xLoc[] = {20, 155, 290, 425, 560};
+		
+		try {
+			// wanted to do a for-each but then I'd still need a counter for the xLoc array.
+			for(int i = 0; i < 5; i++){
+			    String location = "/images/cards/back/b1fv.png";	
+				Image img = ImageIO.read(getClass().getResource(location));
+				g.drawImage(img, xLoc[i], yLoc, cWidth, cHeight, null);	
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * The buttons on the bottom
 	 */
 	private void buttons(Graphics g){
 		
 	}
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * The main method to get us started - calls init();
