@@ -13,6 +13,12 @@
  * 2) Create "bet" word and a variable for bet amount
  * 3) Create "deal/draw" button
  * 4) Download/Find new cards that will not look pixelated
+ * 5) Make some simple buttons for Draw, Deal, etc...
+ * 6) Layout cards after user clicks deal / change text to say draw ...
+ * 7) For 6 let's just make a deal boolean, call same method.
+ * 8)
+ * ...
+ * 20) REFACTOR THIS MESS!
  */
 
 package videopoker;
@@ -21,10 +27,16 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 public class JacksGUI extends JFrame{
 	
@@ -36,6 +48,18 @@ public class JacksGUI extends JFrame{
 	
 	// A bet amount
 	private int betAmount = 0;
+	
+	// Is this a new deal
+	private boolean deal = true;
+	
+	// is this the first deal
+	private boolean firstGame = true;
+	
+	// our hand
+	private Hand hand;
+	
+	// held array
+	private boolean[] held = {false, false, false ,false, false};
 	
 	// The default font
 //	private final Font DEFAULT_FONT; //TODO
@@ -56,8 +80,12 @@ public class JacksGUI extends JFrame{
 		payout(g);
 		handLabel(g);
 		betLabel(g);
-		// this should be in init() but init doesn;t have Graphics parameter...
-		loadBacks(g);
+		if(this.firstGame){
+			loadBacks(g);
+		}else{
+		    this.cards(g, this.hand);
+		}
+		dealButton(g);
 	}
 	
 	private void handLabel(Graphics g){
@@ -65,7 +93,6 @@ public class JacksGUI extends JFrame{
 		g.setColor(Color.RED);
 		// this is just for testing....
 		g.drawString("JACKS OR BETTER", (this.WIDTH / 2) - 125, 280);
-		
 	}
 	
 	private void betLabel(Graphics g){
@@ -122,7 +149,6 @@ public class JacksGUI extends JFrame{
 		int yLoc = 325;
         // (135*n)+20
 		int xLoc[] = {20, 155, 290, 425, 560};
-		
 		try {
 			// wanted to do a for-each but then I'd still need a counter for the xLoc array.
 			for(int i = 0; i < hand.hand.length; i++){
@@ -136,9 +162,6 @@ public class JacksGUI extends JFrame{
 		}
 	}
 	
-	/**
-	 * Method used for printing the backs
-	 */
 	private void loadBacks(Graphics g){
 		int cWidth = 120;
 		int cHeight = 170;
@@ -158,11 +181,93 @@ public class JacksGUI extends JFrame{
 		}
 	}
 	
-	/**
-	 * The buttons on the bottom
-	 */
-	private void buttons(Graphics g){
+	private void dealButton(Graphics g){
+		g.setFont(new Font("default", Font.BOLD, 12));
+		// attempt a custom yeller....
+		g.setColor(new Color(255,255,102));
+		g.fill3DRect(this.HEIGHT-10, this.HEIGHT-35, 100, 25, true);
+		// wanted white but it was hard to see.
+		g.setColor(Color.BLACK);
+		if(deal){
+			g.drawString("Deal", this.HEIGHT+20, this.HEIGHT-18);
+		}else{
+			g.drawString("Draw", this.HEIGHT+20, this.HEIGHT-18);
+		}
 		
+	}
+	
+	private void dealClicked(){
+		if(deal){
+			deal = false;
+			firstGame = false;
+			this.hand = new Hand();
+			hand.deal();
+			held = new boolean[] {false, false, false, false, false};
+		}else{
+		    deal = true;
+		    this.draw(this.hand, held);
+		}
+		repaint();
+	}
+	
+	private void draw(Hand hand, boolean[] held){
+		for(int i = 0; i < held.length; i++){
+			if(held[i]==false){
+				hand.newCard(i);
+			}
+		}
+	}
+
+	private void mouseIntegration(){
+        JPanel panel = new JPanel();
+		panel.addMouseListener(new MouseAdapter() {
+		     public void mousePressed(MouseEvent e) {
+		    	 if((e.getX() > 587 && e.getX() < 684) && (e.getY() > 548 && e.getY() < 570)){
+		    		 System.out.println("dealClicked()");
+		    		 dealClicked();
+		    		 return;
+		    	 }else if(isCardButton(e.getX(), e.getY()) != -1){
+		    		 held[(isCardButton(e.getX(), e.getY())) - 1] = true;
+		    		 System.out.println("card " + isCardButton(e.getX(), e.getY()) + " clicked");
+		    	 }else{
+		    		 JOptionPane.showMessageDialog(null,  "x="+e.getX() +"\n" +"y="+e.getY());	 
+		    	 } 
+		     }
+		  });
+		this.add(panel);
+		repaint();
+	}
+	
+	private int isCardButton(int x, int y){
+		
+		final int yStart = 308;
+		final int yEnd = 476;
+		
+		// card 1 location:
+		if((x > 19 && y > yStart) && (x < 135 && y < yEnd)){
+			return 1;
+		}
+		
+		// card 2 location:
+		if((x > 153 && y > yStart) && (x < 270 && y < yEnd)){
+			return 2;
+		}
+		
+		// card 3 location
+		if((x > 287 && y > yStart) && (x < 403 && y < yEnd)){
+			return 3;
+		}
+		
+		// card 4 location
+		if((x > 422 && y > yStart) && (x < 539 && y < yEnd)){
+			return 4;
+		}
+		
+		// card 5 location
+		if((x > 558 && y > yStart) && (x < 675 && y < yEnd)){
+			return 5;
+		}
+		return -1;
 	}
 	
 	/**
@@ -173,6 +278,7 @@ public class JacksGUI extends JFrame{
 		this.setResizable(false);
 		this.setTitle("Jacks or better");
 		this.setVisible(true);
+		this.mouseIntegration();
 	}
 	
 	/**
