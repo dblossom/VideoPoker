@@ -30,10 +30,10 @@ public class Credit {
 	}
 	
 	public void addCredits(int c){
-		this.credit =+ c;
+		this.credit += c;
 	}
 	
 	public void subtractCredits(int c){
-		this.credit =-c;
+		this.credit -=c;
 	}
 }

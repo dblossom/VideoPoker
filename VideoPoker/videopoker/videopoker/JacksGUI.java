@@ -48,9 +48,6 @@ public class JacksGUI extends JFrame{
 	private final int WIDTH = 700;
 	private final int HEIGHT = 600;
 	
-	// A bet amount
-	private int betAmount = 0;
-	
 	// Is this a new deal
 	private boolean deal = true;
 	
@@ -66,7 +63,8 @@ public class JacksGUI extends JFrame{
 	// our hand ranking
 	private String handRank = "";
 	
-	// amount we are betting 
+	// the bet
+	private Bet bet = new Bet();
 	
 	// The default font
 //	private final Font DEFAULT_FONT; //TODO
@@ -109,7 +107,7 @@ public class JacksGUI extends JFrame{
 	private void betLabel(Graphics g){
 		g.setFont(new Font("default", Font.BOLD, 16));
 		g.setColor(Color.WHITE);
-		g.drawString("Bet " + this.betAmount, (this.WIDTH / 2) - 35, 515);
+		g.drawString("Bet " + this.bet.getBet(), (this.WIDTH / 2) - 35, 515);
 	}
 	
 	private void payout(Graphics g){
@@ -249,6 +247,21 @@ public class JacksGUI extends JFrame{
 		repaint();
 	}
 	
+	private void betOneClicked(){
+		if(this.bet.getBet() == 5){
+			this.bet.setBet(1);;
+		}else{
+			this.bet.increaseBet(1);
+		}
+		repaint();
+	}
+	
+	private void betMaxClicked(){
+		this.bet.setBet(bet.MAX_BET);
+		repaint();
+		this.dealClicked();
+	}
+	
 	private void draw(Hand hand, boolean[] held){
 		for(int i = 0; i < held.length; i++){
 			if(held[i]==false){
@@ -268,6 +281,12 @@ public class JacksGUI extends JFrame{
 		    	 }else if(isCardButton(e.getX(), e.getY()) != -1){
 		    		 held[(isCardButton(e.getX(), e.getY())) - 1] = true;
 		    		 System.out.println("card " + isCardButton(e.getX(), e.getY()) + " clicked");
+		    	 }else if((e.getX() > 370 && e.getY() > 547) && (e.getX() < 469 && e.getY() < 570)){
+		    		 System.out.println("betOneClicked()");
+		    		 betOneClicked();
+		    	 }else if((e.getX() > 478 && e.getY() > 547) && (e.getX() < 577 && e.getY() < 570)){
+		    		 System.out.println("betMaxClicked()");
+		    		 betMaxClicked();
 		    	 }else{
 		    		 JOptionPane.showMessageDialog(null,  "x="+e.getX() +"\n" +"y="+e.getY());	 
 		    	 } 

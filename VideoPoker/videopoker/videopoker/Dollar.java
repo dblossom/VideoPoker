@@ -13,11 +13,11 @@ public class Dollar {
 	}
 	
 	public void add(double d){
-		this.dollar =+ d;
+		this.dollar += d;
 	}
 	
 	public void subtract(double d){
-		this.dollar =- d;
+		this.dollar -= d;
 	}
 	
 	public double getAmount(){
