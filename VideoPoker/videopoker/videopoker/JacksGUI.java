@@ -38,6 +38,8 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import videopoker.Rank.ranks;
+
 public class JacksGUI extends JFrame{
 	
 	/**
@@ -60,6 +62,11 @@ public class JacksGUI extends JFrame{
 	
 	// held array
 	private boolean[] held = {false, false, false ,false, false};
+	
+	// our hand ranking
+	private String handRank = "";
+	
+	// amount we are betting 
 	
 	// The default font
 //	private final Font DEFAULT_FONT; //TODO
@@ -86,13 +93,17 @@ public class JacksGUI extends JFrame{
 		    this.cards(g, this.hand);
 		}
 		dealButton(g);
+		maxButton(g);
+		betButton(g);
 	}
 	
 	private void handLabel(Graphics g){
+		if(!firstGame)
+		    this.handRank = Rank.rank(this.hand).toString();
 		g.setFont(new Font("default", Font.BOLD, 16));
 		g.setColor(Color.RED);
 		// this is just for testing....
-		g.drawString("JACKS OR BETTER", (this.WIDTH / 2) - 125, 280);
+		g.drawString(this.handRank, (this.WIDTH / 2) - 125, 280);
 	}
 	
 	private void betLabel(Graphics g){
@@ -189,11 +200,39 @@ public class JacksGUI extends JFrame{
 		// wanted white but it was hard to see.
 		g.setColor(Color.BLACK);
 		if(deal){
-			g.drawString("Deal", this.HEIGHT+20, this.HEIGHT-18);
+			g.drawString("DEAL", this.HEIGHT+20, this.HEIGHT-18);
 		}else{
-			g.drawString("Draw", this.HEIGHT+20, this.HEIGHT-18);
+			g.drawString("DRAW", this.HEIGHT+20, this.HEIGHT-18);
 		}
 		
+	}
+	
+	private void maxButton(Graphics g){
+		g.setFont(new Font("default", Font.BOLD, 12));
+		// attempt a custom yeller....
+		g.setColor(new Color(255,255,102));
+		g.fill3DRect(this.HEIGHT-118, this.HEIGHT-35, 100, 25, true);
+		// wanted white but it was hard to see.
+		g.setColor(Color.BLACK);
+		if(deal){
+			g.drawString("BET MAX", this.HEIGHT-98, this.HEIGHT-18);
+		}else{
+			g.drawString("", 0, 0);
+		}
+	}
+	
+	private void betButton(Graphics g){
+		g.setFont(new Font("default", Font.BOLD, 12));
+		// attempt a custom yeller....
+		g.setColor(new Color(255,255,102));
+		g.fill3DRect(this.HEIGHT-225, this.HEIGHT-35, 100, 25, true);
+		// wanted white but it was hard to see.
+		g.setColor(Color.BLACK);
+		if(deal){
+			g.drawString("BET 1", this.HEIGHT-190, this.HEIGHT-18);
+		}else{
+			g.drawString("", 0, 0);
+		}
 	}
 	
 	private void dealClicked(){
