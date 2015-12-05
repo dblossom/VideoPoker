@@ -1,12 +1,18 @@
 package videopoker;
 
-public interface Denomination {
+public enum Denomination {
 	
-	public final double NICKLE = .05;
-	public final double QUARTER = .25;
-	public final double FIFTY = .50;
-	public final double DOLLAR = 1.;
+	NICKLE(.05),
+	QUARTER(.25),
+	FIFTY(.50),
+	DOLLAR(1.);
 	
+	private double realValue;
 	
+	private Denomination(double d){
+		this.realValue = d;
+	}
+	
+	public double getDouble(){ return this.realValue; }
 
 }
