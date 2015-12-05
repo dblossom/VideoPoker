@@ -27,6 +27,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -66,6 +67,9 @@ public class JacksGUI extends JFrame{
 	// the bet
 	private Bet bet = new Bet();
 	
+	// players bankroll
+	private Bankroll bankroll = new Bankroll(new Dollar(), Denomination.QUARTER);
+	
 	// The default font
 //	private final Font DEFAULT_FONT; //TODO
 	
@@ -74,6 +78,25 @@ public class JacksGUI extends JFrame{
 	 */
 	public JacksGUI(){
 		super();
+	}
+	
+	/**
+	 * The main method to get us started - calls init();
+	 * @param args
+	 */
+	public static void main(String[] args){
+		new JacksGUI().init();
+	}
+	
+	/**
+	 * Method used for initalizing this frame
+	 */
+	private void init(){
+		this.setSize(this.WIDTH, this.HEIGHT);
+		this.setResizable(false);
+		this.setTitle("Jacks or better");
+		this.setVisible(true);
+		this.mouseIntegration();
 	}
 	
 	/**
@@ -93,6 +116,8 @@ public class JacksGUI extends JFrame{
 		dealButton(g);
 		maxButton(g);
 		betButton(g);
+		paintHeld(g);
+		credit(g);
 	}
 	
 	private void handLabel(Graphics g){
@@ -171,6 +196,12 @@ public class JacksGUI extends JFrame{
 		}
 	}
 	
+	private void credit(Graphics g){
+	    g.setFont(new Font("default", Font.BOLD, 16));
+	    g.setColor(Color.RED);
+	    g.drawString("CREDITS " + bankroll.convertToCredit(), this.WIDTH - 200, 515);
+	}
+	
 	private void loadBacks(Graphics g){
 		int cWidth = 120;
 		int cHeight = 170;
@@ -243,6 +274,7 @@ public class JacksGUI extends JFrame{
 		}else{
 		    deal = true;
 		    this.draw(this.hand, held);
+		    
 		}
 		repaint();
 	}
@@ -279,8 +311,9 @@ public class JacksGUI extends JFrame{
 		    		 dealClicked();
 		    		 return;
 		    	 }else if(isCardButton(e.getX(), e.getY()) != -1){
-		    		 held[(isCardButton(e.getX(), e.getY())) - 1] = true;
+		    		 held[(isCardButton(e.getX(), e.getY())) - 1] = !held[(isCardButton(e.getX(), e.getY())) - 1];
 		    		 System.out.println("card " + isCardButton(e.getX(), e.getY()) + " clicked");
+                     repaint();
 		    	 }else if((e.getX() > 370 && e.getY() > 547) && (e.getX() < 469 && e.getY() < 570)){
 		    		 System.out.println("betOneClicked()");
 		    		 betOneClicked();
@@ -293,7 +326,6 @@ public class JacksGUI extends JFrame{
 		     }
 		  });
 		this.add(panel);
-		repaint();
 	}
 	
 	private int isCardButton(int x, int y){
@@ -328,22 +360,18 @@ public class JacksGUI extends JFrame{
 		return -1;
 	}
 	
-	/**
-	 * Method used for initalizing this frame
-	 */
-	private void init(){
-		this.setSize(this.WIDTH, this.HEIGHT);
-		this.setResizable(false);
-		this.setTitle("Jacks or better");
-		this.setVisible(true);
-		this.mouseIntegration();
-	}
-	
-	/**
-	 * The main method to get us started - calls init();
-	 * @param args
-	 */
-	public static void main(String[] args){
-		new JacksGUI().init();
+	private void paintHeld(Graphics g){
+		String heldString = "HELD";		
+		g.setFont(new Font("default", Font.BOLD, 18));
+		g.setColor(Color.RED);
+		// 20, 155, 209, 560
+		int xLoc[] = {55, 190, 325, 460, 590};
+		int yLoc = 320;
+		for(int i = 0; i < this.held.length; i++){
+			if(held[i]==true){
+		  	    g.drawString(heldString,xLoc[i],yLoc);
+			}
+		}
+
 	}
 }

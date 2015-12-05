@@ -7,5 +7,5 @@ package videopoker;
  */
 
 public interface Credit {
-	public int convertToCredit(Dollar dollar, double d);
+	public int convertToCredit();
 }

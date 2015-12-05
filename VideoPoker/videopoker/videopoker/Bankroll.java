@@ -12,11 +12,11 @@ package videopoker;
 public class Bankroll implements Credit{
 	
 	private Dollar dollar;
-	private final double[] DENOM = {.5, .25, .50, 1.};
-
+	private double denomination;
 	
-	public Bankroll(Dollar dollar){
+	public Bankroll(Dollar dollar, double denomination){
 		this.dollar = dollar;
+		setDenom(denomination);
 	}
 	
 	public void setBetDenom(int i){
@@ -34,10 +34,14 @@ public class Bankroll implements Credit{
 	public Dollar getDollar(){
 		return this.dollar;
 	}
+	
+	public void setDenom(double d){
+		denomination = d;
+	}
 
 	@Override
-	public int convertToCredit(Dollar dollar, double d) {
-	    return (int) (dollar.getAmount() / d);
+	public int convertToCredit() {
+	    return (int) (dollar.getAmount() / denomination);
 	}
 	
 
