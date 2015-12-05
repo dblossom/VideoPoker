@@ -9,15 +9,13 @@ package videopoker;
  * @author Dan Blossom
  *
  */
-public class Bankroll {
+public class Bankroll implements Credit{
 	
-	private Credit credit;
 	private Dollar dollar;
 	private final double[] DENOM = {.5, .25, .50, 1.};
 
 	
-	public Bankroll(Credit credit, Dollar dollar){
-		this.credit = credit;
+	public Bankroll(Dollar dollar){
 		this.dollar = dollar;
 	}
 	
@@ -36,9 +34,11 @@ public class Bankroll {
 	public Dollar getDollar(){
 		return this.dollar;
 	}
-	
-	public Credit getCredit(){
-		return this.credit;
+
+	@Override
+	public int convertToCredit(Dollar dollar, double d) {
+	    return (int) (dollar.getAmount() / d);
 	}
+	
 
 }
