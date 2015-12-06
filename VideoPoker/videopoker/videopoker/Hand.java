@@ -49,6 +49,8 @@ public class Hand {
 	
 	/**
 	 * Determines if the pair is jacks or higher
+	 * 
+	 * TODO: while it makes sense to be in hand, it should not be ...
 	 */
 	public boolean isJacksOrHigher(){
 		

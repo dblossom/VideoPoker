@@ -30,7 +30,6 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -120,11 +119,14 @@ public class JacksGUI extends JFrame{
 	}
 	
 	private void handLabel(Graphics g){
-		if(!firstGame)
+		if(!firstGame && this.hand.isJacksOrHigher()){
 		    this.handRank = Rank.rank(this.hand).toString();
-		g.setFont(new Font("default", Font.BOLD, 16));
+		    if(this.handRank.equalsIgnoreCase("PAIR")){
+		    	this.handRank = "JACKS OR BETTER";
+		    }
+		}
+		g.setFont(new Font("default", Font.BOLD, 20));
 		g.setColor(Color.RED);
-		// this is just for testing....
 		g.drawString(this.handRank, (this.WIDTH / 2) - 125, 280);
 	}
 	
@@ -275,6 +277,7 @@ public class JacksGUI extends JFrame{
 			hand.deal();
 			held = new boolean[] {false, false, false, false, false};
 			bankroll.getDollar().subtract(bankroll.getDenomination().getDouble() * bet.getBet());
+			this.handRank = "";
 		}else{
 		    deal = true;
 		    this.draw(this.hand, held);
