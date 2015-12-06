@@ -23,7 +23,9 @@ public class Payout {
 	 * @return
 	 */
 	public static int payout(Hand hand, int bet){
-        // there must be a better way!
+        // adjust for the array locations
+		bet = bet - 1;
+		// there must be a better way!
 		if(Rank.rank(hand) == Rank.ranks.ROYAL){
         	return royal[bet];
         }

@@ -34,6 +34,10 @@ public class Bankroll implements Credit{
 	public Dollar getDollar(){
 		return this.dollar;
 	}
+	
+	public Denomination getDenomination(){
+		return this.denomination;
+	}
 
 	@Override
 	public int convertToCredit() {

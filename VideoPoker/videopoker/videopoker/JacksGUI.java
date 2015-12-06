@@ -27,22 +27,18 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import videopoker.Rank.ranks;
-
 public class JacksGUI extends JFrame{
 	
+	private static final long serialVersionUID = 1L;
 	/**
 	 * The size of the frame
 	 */
@@ -111,12 +107,15 @@ public class JacksGUI extends JFrame{
 		if(this.firstGame){
 			loadBacks(g);
 		}else{
+			loadBacks(g);
 		    this.cards(g, this.hand);
 		}
 		dealButton(g);
 		maxButton(g);
 		betButton(g);
-		paintHeld(g);
+		if(!deal){
+		    paintHeld(g);
+		}
 		credit(g);
 	}
 	
@@ -186,6 +185,7 @@ public class JacksGUI extends JFrame{
 		try {
 			// wanted to do a for-each but then I'd still need a counter for the xLoc array.
 			for(int i = 0; i < hand.hand.length; i++){
+			//	Thread.sleep(1000);
 				Card card = hand.hand[i];
 			    String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";	
 				Image img = ImageIO.read(getClass().getResource(location));
@@ -193,7 +193,10 @@ public class JacksGUI extends JFrame{
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}// catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+		//	e.printStackTrace();
+		//}
 	}
 	
 	private void credit(Graphics g){
@@ -271,27 +274,35 @@ public class JacksGUI extends JFrame{
 			this.hand = new Hand();
 			hand.deal();
 			held = new boolean[] {false, false, false, false, false};
+			bankroll.getDollar().subtract(bankroll.getDenomination().getDouble() * bet.getBet());
 		}else{
 		    deal = true;
 		    this.draw(this.hand, held);
+		    if(Payout.payout(this.hand, this.bet.getBet()) != -1){
+		    	bankroll.getDollar().add(bet.getBet() * bankroll.getDenomination().getDouble());
+		    }
 		    
 		}
 		repaint();
 	}
 	
 	private void betOneClicked(){
-		if(this.bet.getBet() == 5){
-			this.bet.setBet(1);;
-		}else{
-			this.bet.increaseBet(1);
+		if(deal){
+		    if(this.bet.getBet() == 5){
+			    this.bet.setBet(1);
+		    }else{
+			    this.bet.increaseBet(1);
+		    }
+		    repaint();
 		}
-		repaint();
 	}
 	
 	private void betMaxClicked(){
-		this.bet.setBet(bet.MAX_BET);
-		repaint();
-		this.dealClicked();
+		if(deal){
+		    this.bet.setBet(bet.MAX_BET);
+		    repaint();
+		    this.dealClicked();
+		}
 	}
 	
 	private void draw(Hand hand, boolean[] held){
