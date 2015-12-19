@@ -119,7 +119,8 @@ public class JacksGUI extends JFrame{
 	}
 	
 	private void handLabel(Graphics g){
-		if(!firstGame && this.hand.isJacksOrHigher()){
+		//System.out.println(this.hand.isJacksOrHigher());
+		if(!firstGame){
 		    this.handRank = Rank.rank(this.hand).toString();
 		    if(this.handRank.equalsIgnoreCase("PAIR")){
 		    	this.handRank = "JACKS OR BETTER";
@@ -127,7 +128,8 @@ public class JacksGUI extends JFrame{
 		}
 		g.setFont(new Font("default", Font.BOLD, 20));
 		g.setColor(Color.RED);
-		g.drawString(this.handRank, (this.WIDTH / 2) - 125, 280);
+		g.drawString(this.handRank, (this.WIDTH / 2) - 100, 300);
+		System.out.println(this.handRank);
 	}
 	
 	private void betLabel(Graphics g){
