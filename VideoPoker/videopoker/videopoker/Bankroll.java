@@ -23,8 +23,14 @@ public class Bankroll implements Credit{
 
 	}
 	
-	public void win(){
-		
+	public void win(Hand hand, Bet bet){
+		// Hard to read / understand ?
+		// the winning dollar amount will be determine based upon
+		// 1) the denomination (the bet amount, quarter, nickel, dollar, etc)
+		// 2) the bet size (1-5) which actually correlate to a payout amount defined in payout
+		// so: bet gives us the number of denominations to returns, and that arrives at
+		//     denomination X bet (which correlates to a payout amount).
+		this.dollar.add((Payout.payout(hand, bet.getBet())) * this.denomination.getDouble());
 	}
 	
 	public void lose(){

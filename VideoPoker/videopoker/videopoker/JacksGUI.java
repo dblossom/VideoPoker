@@ -65,6 +65,9 @@ public class JacksGUI extends JFrame{
 	// players bankroll
 	private Bankroll bankroll = new Bankroll(new Dollar(), Denomination.QUARTER);
 	
+	// display credits or dollars
+	private boolean credits = true;
+	
 	// The default font
 //	private final Font DEFAULT_FONT; //TODO
 	
@@ -107,7 +110,7 @@ public class JacksGUI extends JFrame{
 			loadBacks(g);
 		}else{
 			loadBacks(g);
-		    this.cards(g, this.hand);
+			this.cards(g, this.hand);
 		}
 		dealButton(g);
 		maxButton(g);
@@ -123,7 +126,11 @@ public class JacksGUI extends JFrame{
 		if(!firstGame){
 		    this.handRank = Rank.rank(this.hand).toString();
 		    if(this.handRank.equalsIgnoreCase("PAIR")){
-		    	this.handRank = "JACKS OR BETTER";
+		    	if(this.hand.isJacksOrHigher()){
+		    		this.handRank = "JACKS OR BETTER";	
+		    	}else{
+		    		this.handRank = "";
+		    	}
 		    }
 		}
 		g.setFont(new Font("default", Font.BOLD, 20));
@@ -206,7 +213,11 @@ public class JacksGUI extends JFrame{
 	private void credit(Graphics g){
 	    g.setFont(new Font("default", Font.BOLD, 16));
 	    g.setColor(Color.RED);
-	    g.drawString("CREDITS " + bankroll.convertToCredit(), this.WIDTH - 200, 515);
+	    if(credits){
+	        g.drawString("CREDITS:    " + bankroll.convertToCredit(), this.WIDTH - 200, 515);
+	    }else{
+	    	g.drawString("CASH:    " + bankroll.getDollar().getAmount(), this.WIDTH - 200, 515);
+	    }
 	}
 	
 	private void loadBacks(Graphics g){
@@ -266,8 +277,6 @@ public class JacksGUI extends JFrame{
 		g.setColor(Color.BLACK);
 		if(deal){
 			g.drawString("BET 1", this.HEIGHT-190, this.HEIGHT-18);
-		}else{
-			g.drawString("", 0, 0);
 		}
 	}
 	
@@ -284,10 +293,14 @@ public class JacksGUI extends JFrame{
 		    deal = true;
 		    this.draw(this.hand, held);
 		    if(Payout.payout(this.hand, this.bet.getBet()) != -1){
-		    	bankroll.getDollar().add(bet.getBet() * bankroll.getDenomination().getDouble());
+		    	bankroll.win(this.hand, this.bet);
 		    }
-		    
 		}
+		repaint();
+	}
+	
+	private void payoutClicked(){
+		this.credits = !credits;
 		repaint();
 	}
 	
@@ -336,6 +349,8 @@ public class JacksGUI extends JFrame{
 		    	 }else if((e.getX() > 478 && e.getY() > 547) && (e.getX() < 577 && e.getY() < 570)){
 		    		 System.out.println("betMaxClicked()");
 		    		 betMaxClicked();
+		    	 }else if((e.getX() > 500 && e.getY() > 480) && (e.getX() < 605 && e.getY() < 495)){
+		    		 payoutClicked();
 		    	 }else{
 		    		 JOptionPane.showMessageDialog(null,  "x="+e.getX() +"\n" +"y="+e.getY());	 
 		    	 } 
