@@ -49,6 +49,4 @@ public class Bankroll implements Credit{
 	public int convertToCredit() {
 	    return (int) (dollar.getAmount() / denomination.getDouble());
 	}
-	
-
 }
