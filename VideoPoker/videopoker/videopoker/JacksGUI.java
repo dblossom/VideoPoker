@@ -84,7 +84,6 @@ public class JacksGUI extends JFrame{
 	 */
 	public static void main(String[] args){
 		new JacksGUI().init();
-		System.out.println("MAIN LOADED");
 	}
 	
 	/**
@@ -337,18 +336,14 @@ public class JacksGUI extends JFrame{
 		panel.addMouseListener(new MouseAdapter() {
 		     public void mousePressed(MouseEvent e) {
 		    	 if((e.getX() > 587 && e.getX() < 684) && (e.getY() > 548 && e.getY() < 570)){
-		    		 System.out.println("dealClicked()");
 		    		 dealClicked();
 		    		 return;
 		    	 }else if(isCardButton(e.getX(), e.getY()) != -1){
 		    		 held[(isCardButton(e.getX(), e.getY())) - 1] = !held[(isCardButton(e.getX(), e.getY())) - 1];
-		    		 System.out.println("card " + isCardButton(e.getX(), e.getY()) + " clicked");
                      repaint();
 		    	 }else if((e.getX() > 370 && e.getY() > 547) && (e.getX() < 469 && e.getY() < 570)){
-		    		 System.out.println("betOneClicked()");
 		    		 betOneClicked();
 		    	 }else if((e.getX() > 478 && e.getY() > 547) && (e.getX() < 577 && e.getY() < 570)){
-		    		 System.out.println("betMaxClicked()");
 		    		 betMaxClicked();
 		    	 }else if((e.getX() > 500 && e.getY() > 480) && (e.getX() < 605 && e.getY() < 495)){
 		    		 payoutClicked();
