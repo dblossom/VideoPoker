@@ -56,9 +56,6 @@ public class JacksGUI extends JFrame{
 	// held array
 	private boolean[] held = {false, false, false ,false, false};
 	
-	// our hand ranking
-	private String handRank = "";
-	
 	// the bet
 	private Bet bet = new Bet();
 	
@@ -122,21 +119,21 @@ public class JacksGUI extends JFrame{
 	}
 	
 	private void handLabel(Graphics g){
-		//System.out.println(this.hand.isJacksOrHigher());
+		String handRank = "";
 		if(!firstGame){
-		    this.handRank = Rank.rank(this.hand).toString();
-		    if(this.handRank.equalsIgnoreCase("PAIR")){
+			handRank = Rank.rank(this.hand).toString(); 
+		    if(handRank.equalsIgnoreCase("PAIR")){
 		    	if(this.hand.isJacksOrHigher()){
-		    		this.handRank = "JACKS OR BETTER";	
+		    		handRank = "JACKS OR BETTER";	
 		    	}else{
-		    		this.handRank = "";
+		    		handRank = "";
 		    	}
 		    }
 		}
 		g.setFont(new Font("default", Font.BOLD, 20));
 		g.setColor(Color.RED);
-		g.drawString(this.handRank, (this.WIDTH / 2) - 100, 300);
-		System.out.println(this.handRank);
+		g.drawString(handRank, (this.WIDTH / 2) - 100, 300);
+		System.out.println(handRank);
 	}
 	
 	private void betLabel(Graphics g){
@@ -288,7 +285,6 @@ public class JacksGUI extends JFrame{
 			hand.deal();
 			held = new boolean[] {false, false, false, false, false};
 			bankroll.getDollar().subtract(bankroll.getDenomination().getDouble() * bet.getBet());
-			this.handRank = "";
 		}else{
 		    deal = true;
 		    this.draw(this.hand, held);
