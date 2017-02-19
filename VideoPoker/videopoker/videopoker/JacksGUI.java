@@ -113,8 +113,9 @@ public class JacksGUI extends JFrame{
 		maxButton(g);
 		betButton(g);
 		if(!deal){
-		    paintHeld(g);
+		 //   paintHeld(g);
 		}
+		paintHeld(g);
 		credit(g);
 	}
 	
