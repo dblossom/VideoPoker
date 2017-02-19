@@ -50,6 +50,9 @@ public class JacksGUI extends JFrame{
 	// is this the first deal
 	private boolean firstGame = true;
 	
+	// If the hand is being dealt
+	private boolean beingDealt = true;
+	
 	// our hand
 	private Hand hand;
 	
@@ -194,18 +197,22 @@ public class JacksGUI extends JFrame{
 		try {
 			// wanted to do a for-each but then I'd still need a counter for the xLoc array.
 			for(int i = 0; i < hand.hand.length; i++){
-			//	Thread.sleep(1000);
+				if(beingDealt){
+					Thread.sleep(250);
+				}
 				Card card = hand.hand[i];
 			    String location = "/images/cards/front/" + card.valueToString() + card.suitToChar() + ".png";	
 				Image img = ImageIO.read(getClass().getResource(location));
 				g.drawImage(img, xLoc[i], yLoc, cWidth, cHeight, null);	
 			}
+			if(beingDealt){
+				beingDealt =false; 
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
-		}// catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+		} catch (InterruptedException e) {
 		//	e.printStackTrace();
-		//}
+		}
 	}
 	
 	private void credit(Graphics g){
@@ -280,6 +287,7 @@ public class JacksGUI extends JFrame{
 	
 	private void dealClicked(){
 		if(deal){
+			beingDealt = true;
 			deal = false;
 			firstGame = false;
 			this.hand = new Hand();
@@ -287,6 +295,7 @@ public class JacksGUI extends JFrame{
 			held = new boolean[] {false, false, false, false, false};
 			bankroll.getDollar().subtract(bankroll.getDenomination().getDouble() * bet.getBet());
 		}else{
+			beingDealt = true;
 		    deal = true;
 		    this.draw(this.hand, held);
 		    if(Payout.payout(this.hand, this.bet.getBet()) != -1){
@@ -345,7 +354,7 @@ public class JacksGUI extends JFrame{
 		    	 }else if((e.getX() > 500 && e.getY() > 480) && (e.getX() < 605 && e.getY() < 495)){
 		    		 payoutClicked();
 		    	 }else{
-		    		 JOptionPane.showMessageDialog(null,  "x="+e.getX() +"\n" +"y="+e.getY());	 
+		    		 //JOptionPane.showMessageDialog(null,  "x="+e.getX() +"\n" +"y="+e.getY());	 
 		    	 } 
 		     }
 		  });
