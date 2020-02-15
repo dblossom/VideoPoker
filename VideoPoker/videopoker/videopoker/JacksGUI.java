@@ -34,6 +34,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 
 public class JacksGUI extends JFrame{
 	
@@ -95,6 +96,7 @@ public class JacksGUI extends JFrame{
 		this.setTitle("Jacks or better");
 		this.setVisible(true);
 		this.mouseIntegration();
+		this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 	
 	/**
@@ -260,27 +262,39 @@ public class JacksGUI extends JFrame{
 	}
 	
 	private void maxButton(Graphics g){
-		g.setFont(new Font("default", Font.BOLD, 12));
-		// attempt a custom yeller....
-		g.setColor(new Color(255,255,102));
-		g.fill3DRect(this.HEIGHT-118, this.HEIGHT-35, 100, 25, true);
-		// wanted white but it was hard to see.
-		g.setColor(Color.BLACK);
+//		g.setFont(new Font("default", Font.BOLD, 12));
+//		// attempt a custom yeller....
+//		g.setColor(new Color(255,255,102));
+//		g.fill3DRect(this.HEIGHT-118, this.HEIGHT-35, 100, 25, true);
+//		// wanted white but it was hard to see.
+//		g.setColor(Color.BLACK);
 		if(deal){
+			g.setFont(new Font("default", Font.BOLD, 12));
+			// attempt a custom yeller....
+			g.setColor(new Color(255,255,102));
+			g.fill3DRect(this.HEIGHT-118, this.HEIGHT-35, 100, 25, true);
+			// wanted white but it was hard to see.
+			g.setColor(Color.BLACK);
 			g.drawString("BET MAX", this.HEIGHT-98, this.HEIGHT-18);
-		}else{
-			g.drawString("", 0, 0);
-		}
+		} //else{
+//			g.drawString("", 0, 0);
+//		}
 	}
 	
 	private void betButton(Graphics g){
-		g.setFont(new Font("default", Font.BOLD, 12));
-		// attempt a custom yeller....
-		g.setColor(new Color(255,255,102));
-		g.fill3DRect(this.HEIGHT-225, this.HEIGHT-35, 100, 25, true);
-		// wanted white but it was hard to see.
-		g.setColor(Color.BLACK);
+//		g.setFont(new Font("default", Font.BOLD, 12));
+//		// attempt a custom yeller....
+//		g.setColor(new Color(255,255,102));
+//		g.fill3DRect(this.HEIGHT-225, this.HEIGHT-35, 100, 25, true);
+//		// wanted white but it was hard to see.
+//		g.setColor(Color.BLACK);
 		if(deal){
+		    g.setFont(new Font("default", Font.BOLD, 12));
+			// attempt a custom yeller....
+			g.setColor(new Color(255,255,102));
+			g.fill3DRect(this.HEIGHT-225, this.HEIGHT-35, 100, 25, true);
+			// wanted white but it was hard to see.
+			g.setColor(Color.BLACK);
 			g.drawString("BET 1", this.HEIGHT-190, this.HEIGHT-18);
 		}
 	}
