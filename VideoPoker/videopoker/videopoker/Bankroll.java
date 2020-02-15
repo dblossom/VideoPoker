@@ -5,6 +5,7 @@ package videopoker;
  * I suppose I could just do some conversion in a money class
  * that goes from credits to dollars but whatever ... this seems
  * a bit more abstaract. 
+ * can I add this line?
  * 
  * @author Dan Blossom
  *
